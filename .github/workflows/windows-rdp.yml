@@ -1,0 +1,57 @@
+name: Windows 2025 RDP Cloudflare
+on: [workflow_dispatch]
+
+jobs:
+  rdp-access:
+    runs-on: windows-2025
+    steps:
+      - name: Configurar Usuário e Senha
+        shell: powershell
+        run: |
+          $user = "runneradmin"
+          $password = "@A3235#mama" # Sua senha definida
+          
+          # Define a senha no sistema
+          $secstr = ConvertTo-SecureString $password -AsPlainText -Force
+          Set-LocalUser -Name $user -Password $secstr
+          
+          Write-Host "------------------------------------------------"
+          Write-Host "USUÁRIO: $user"
+          Write-Host "SENHA: $password"
+          Write-Host "------------------------------------------------"
+
+      - name: Habilitar RDP
+        shell: powershell
+        run: |
+          Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server' -Name "fDenyTSConnections" -Value 0
+          Enable-NetFirewallRule -DisplayGroup "Remote Desktop"
+          Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp' -Name "UserAuthentication" -Value 1
+
+      - name: Baixar e Abrir Túnel
+        shell: powershell
+        run: |
+          Invoke-WebRequest -Uri "https://github.com" -OutFile "cloudflared.exe"
+          
+          # Inicia o túnel TCP na porta do RDP
+          Start-Process ./cloudflared.exe -ArgumentList "tunnel --url tcp://localhost:3389" -RedirectStandardError "tunnel.log"
+          
+          Write-Host "Aguardando link..."
+          Start-Sleep -Seconds 20
+          
+          # Busca a URL no log
+          $url = Select-String -Path "tunnel.log" -Pattern "tcp://[a-zA-Z0-9.-]+\.trycloudflare\.com:[0-9]+" | ForEach-Object { $_.Matches.Value } | Select-Object -First 1
+          
+          if ($url) {
+            Write-Host "`n========================================================"
+            Write-Host "COPIE E COLE NO SEU ACESSO REMOTO (MSTSC):"
+            Write-Host "$url"
+            Write-Host "USER: runneradmin"
+            Write-Host "PASS: @A3235#mama"
+            Write-Host "========================================================`n"
+          } else {
+            Write-Host "Link não encontrado. Verifique os logs."
+            Get-Content tunnel.log
+          }
+
+          # Mantém rodando (6 horas)
+          Start-Sleep -Seconds 21600
