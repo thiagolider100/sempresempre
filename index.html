@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Empresa Pro | Inovação e Resultados</title>
+    <style>
+        /* Estilos Gerais */
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { line-height: 1.6; color: #333; }
+
+        /* Cabeçalho */
+        header {
+            background: #fff;
+            padding: 1rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .logo { font-size: 1.5rem; font-weight: bold; color: #0056b3; }
+        nav a { margin-left: 20px; text-decoration: none; color: #333; font-weight: 500; }
+
+        /* Slider Container */
+        .slider-container {
+            position: relative;
+            width: 100%;
+            height: 500px;
+            overflow: hidden;
+        }
+
+        .slides {
+            display: flex;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.5s ease-in-out;
+        }
+
+        .slide {
+            min-width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            color: white;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+
+        /* Overlay para legibilidade */
+        .slide::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.4);
+            z-index: 1;
+        }
+
+        .slide-content { position: relative; z-index: 2; padding: 20px; }
+        .slide-content h2 { font-size: 3rem; margin-bottom: 10px; }
+        .slide-content p { font-size: 1.2rem; margin-bottom: 20px; }
+
+        /* Botões do Slider */
+        .btn-slide {
+            padding: 12px 30px;
+            background: #0056b3;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: 0.3s;
+        }
+        .btn-slide:hover { background: #003d80; }
+
+        /* Controles */
+        .prev, .next {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255,255,255,0.3);
+            color: white;
+            padding: 15px;
+            cursor: pointer;
+            border: none;
+            z-index: 10;
+            font-size: 20px;
+        }
+        .next { right: 0; }
+        .prev { left: 0; }
+
+        /* Seção Sobre */
+        .about { padding: 80px 10% ; text-align: center; }
+        .about h2 { margin-bottom: 20px; font-size: 2rem; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo">LOGOTIPO</div>
+        <nav>
+            <a href="#">Home</a>
+            <a href="#">Serviços</a>
+            <a href="#">Sobre</a>
+            <a href="#">Contato</a>
+        </nav>
+    </header>
+
+    <div class="slider-container">
+        <div class="slides" id="slider">
+            <div class="slide" style="background-image: url('https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1350&q=80');">
+                <div class="slide-content">
+                    <h2>Soluções Inovadoras</h2>
+                    <p>Transformamos tecnologia em resultados para o seu negócio.</p>
+                    <a href="#" class="btn-slide">Saiba Mais</a>
+                </div>
+            </div>
+            <div class="slide" style="background-image: url('https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=1350&q=80');">
+                <div class="slide-content">
+                    <h2>Análise de Dados</h2>
+                    <p>Decisões inteligentes baseadas em métricas reais.</p>
+                    <a href="#" class="btn-slide">Ver Planos</a>
+                </div>
+            </div>
+            <div class="slide" style="background-image: url('https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=1350&q=80');">
+                <div class="slide-content">
+                    <h2>Equipe Especializada</h2>
+                    <p>Os melhores profissionais do mercado à sua disposição.</p>
+                    <a href="#" class="btn-slide">Fale Conosco</a>
+                </div>
+            </div>
+        </div>
+
+        <button class="prev" onclick="moveSlide(-1)">&#10094;</button>
+        <button class="next" onclick="moveSlide(1)">&#10095;</button>
+    </div>
+
+    <section class="about">
+        <h2>Por que nos escolher?</h2>
+        <p>Nossa empresa foca na excelência e na satisfação do cliente. Com mais de 10 anos de mercado, entregamos projetos que agregam valor e modernidade.</p>
+    </section>
+
+    <script>
+        let currentIndex = 0;
+        const slides = document.getElementById('slider');
+        const totalSlides = document.querySelectorAll('.slide').length;
+
+        function moveSlide(direction) {
+            currentIndex += direction;
+
+            if (currentIndex >= totalSlides) {
+                currentIndex = 0;
+            } else if (currentIndex < 0) {
+                currentIndex = totalSlides - 1;
+            }
+
+            const offset = -currentIndex * 100;
+            slides.style.transform = `translateX(${offset}%)`;
+        }
+
+        // Auto-play opcional (muda a cada 5 segundos)
+        setInterval(() => {
+            moveSlide(1);
+        }, 5000);
+    </script>
+
+</body>
+</html>
